@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "target": "esnext",
+        "lib": ["esnext", "dom"],
+        "module": "esnext",
+        "strict": true,
+        "baseUrl": "./",
+        "outDir": "./dist",
+        "sourceMap": false
+    },
+    "exclude": [
+        "dist"
+    ]
+}

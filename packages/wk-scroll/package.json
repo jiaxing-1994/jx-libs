@@ -1,0 +1,18 @@
+{
+  "name": "@wk-libs/scroll",
+  "version": "1.0.8",
+  "description": "",
+  "main": "dist/scroll.js",
+  "module": "dist/scroll.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "build": "rollup --config ../../build/rollup.scroll.config.js"
+  },
+  "author": "jiaxing",
+  "license": "ISC"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@wk-libs/utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/utils.js",
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "build": "rollup --config ../../build/rollup.utils.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@wk-libs/date",
+  "version": "1.0.3",
+  "description": "",
+  "main": "dist/date.js",
+  "module": "dist/date.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "rollup --config ../../build/rollup.date.config.js"
+  },
+  "keywords": [],
+  "author": "jiaxing",
+  "license": "ISC",
+  "dependencies": {
+    "@wk-libs/utils": "workspace:^1.0.0"
+  }
+}

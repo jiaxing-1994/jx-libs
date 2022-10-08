@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,minimal-ui,viewport-fit=cover"
+	/>
+	<title>date</title>
+	<style>
+		html,body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+		}
+		#scrollParent {
+			height: 100%;
+		}
+		#scroll {
+			width: 2000px;
+		}
+		.item {
+			height: 40px;
+			background-image: linear-gradient(90deg, red, green);
+		}
+	</style>
+</head>
+<body>
+	<div id="scrollParent">
+		<div id="scroll"></div>
+	</div>
+	<script type="module">
+		import date from '../dist/date.js';
+		// console.log(date().add(1, 'second').format('DD'));
+		// console.log(date(new Date('2021-09-01')).format());
+		// console.log(date().startOf('second').format());
+		// console.log(date().isBefore(date('2022-10-07')));
+		console.log(date('2019-01-25').diff(date('2018-06-05'), 'month', true));
+		console.log(date('2019-01-25').diffForStr(date('2018-06-05'), 'month'));
+	</script>
+</body>
+</html>

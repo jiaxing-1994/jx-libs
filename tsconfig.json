@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+  },
+  "exclude": [
+    "build",
+    "dist"
+  ],
+  "references": [
+    { "path": "./packages/wk-scroll" },
+    { "path": "./packages/wk-utils" },
+    { "path": "./packages/wk-date" }
+  ]
+}

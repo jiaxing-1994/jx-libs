@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,minimal-ui,viewport-fit=cover"
+	/>
+	<title>scroll</title>
+	<style>
+		html,body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+		}
+		#scrollParent {
+			height: 100%;
+		}
+		#scroll {
+			width: 2000px;
+		}
+		.item {
+			height: 40px;
+			background-image: linear-gradient(90deg, red, green);
+		}
+	</style>
+</head>
+<body>
+	<div id="scrollParent">
+		<div id="scroll"></div>
+	</div>
+	<script>
+		const itemsFrag = document.createDocumentFragment();
+		for (let i = 0; i < 100; i += 1) {
+			const li = document.createElement('li');
+			li.classList.add('item');
+			li.innerText = Array.from(new Array(100)).map((item, index) => index).join(',');
+			itemsFrag.appendChild(li);
+		}
+		document.getElementById('scroll').appendChild(itemsFrag);
+	</script>
+	<script type="module">
+		import WScroll from '../dist/scroll.js';
+		const wScroll = new WScroll(document.getElementById('scrollParent'), {
+			scroll: 'free',
+			isOrigin: false,
+		});
+	</script>
+</body>
+</html>
