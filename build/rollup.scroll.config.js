@@ -7,5 +7,8 @@ export default {
 		file: path.resolve(__dirname, '../packages/wk-scroll/dist/scroll.js'),
 		format: 'esm'
 	},
+	watch: {
+		exclude: 'node_modules/**'
+	},
 	...baseConfig,
 };

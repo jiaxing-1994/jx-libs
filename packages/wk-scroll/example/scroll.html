@@ -16,7 +16,6 @@
 			height: 100%;
 		}
 		#scroll {
-			width: 2000px;
 		}
 		.item {
 			height: 40px;
@@ -29,20 +28,49 @@
 		<div id="scroll"></div>
 	</div>
 	<script>
-		const itemsFrag = document.createDocumentFragment();
-		for (let i = 0; i < 100; i += 1) {
-			const li = document.createElement('li');
-			li.classList.add('item');
-			li.innerText = Array.from(new Array(100)).map((item, index) => index).join(',');
-			itemsFrag.appendChild(li);
-		}
-		document.getElementById('scroll').appendChild(itemsFrag);
+		// const itemsFrag = document.createDocumentFragment();
+		// for (let i = 0; i < 20; i += 1) {
+		// 	const li = document.createElement('li');
+		// 	li.classList.add('item');
+		// 	li.innerText = Array.from(new Array(100)).map((item, index) => index).join(',');
+		// 	itemsFrag.appendChild(li);
+		// }
+		// document.getElementById('scroll').appendChild(itemsFrag);
 	</script>
 	<script type="module">
-		import WScroll from '../dist/scroll.js';
+		import WScroll, { ScrollRefresh } from '../dist/scroll.js';
 		const wScroll = new WScroll(document.getElementById('scrollParent'), {
-			scroll: 'free',
+			scroll: 'y',
 			isOrigin: false,
+		});
+		const getData = (num) => {
+			return new Promise((resolve) => {
+				const itemsFrag = document.createDocumentFragment();
+				for (let i = 0; i < num; i += 1) {
+					const li = document.createElement('li');
+					li.classList.add('item');
+					li.innerText = Array.from(new Array(100)).map((item, index) => index).join(',');
+					itemsFrag.appendChild(li);
+				}
+				setTimeout(() => {
+					resolve(itemsFrag);
+				}, 2000);
+			});
+		}
+		wScroll.extend(ScrollRefresh({
+			onPullDown: async () => {
+				const doms = await getData(10);
+				document.getElementById('scroll').appendChild(doms);
+				return false;
+			},
+			onPullUp: async () => {
+				const doms = await getData(0);
+				document.getElementById('scroll').appendChild(doms);
+				return false;
+			}
+		}));
+		wScroll.on('pullRefresh', (params) => {
+			console.log('是否能加载', params);
 		});
 	</script>
 </body>

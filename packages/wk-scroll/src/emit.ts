@@ -1,10 +1,12 @@
 export type FnType = (params?: any) => void;
+
 export type ActionType = {
   type: string,
   fn: FnType,
   context?: object
 }
-export type EmitFn = (action: string, fn: FnType, context?: object) => void;
+
+export type EmitFnType = (action: string, fn: FnType, context?: object) => void;
 
 export default class Emit {
   private actions: Map<string, ActionType[]>

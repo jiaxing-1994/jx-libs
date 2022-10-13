@@ -1,11 +1,17 @@
 import Hooks from './hooks.js';
 import { FIFOCache, getDistance } from './utils.js';
+import ScrollRefresh from '../extends/pullRefresh/index.js';
+import {FnType} from "@src/emit";
+
+export {
+  ScrollRefresh,
+}
 
 interface PosType {
   x: number,
   y: number,
 }
-interface MovePosType extends PosType{
+export interface MovePosType extends PosType{
   tickX: number,
   tickY: number,
 }
@@ -20,32 +26,35 @@ const defaultOptions: Partial<OptionsType> = {
   isOrigin: false,
 }
 
-export type WScrollType = typeof WScroll;
 export default class WScroll {
-  private scrollParentWrap: HTMLElement
-  private scrollWrap: HTMLElement|null
-  private options: Partial<OptionsType>
-  private x: number // 当前x坐标
-  private y: number // 当前y坐标
-  private maxX: number // 最大水平移动距离
-  private maxY: number // 最大垂直移动距离
-  private transRegx: RegExp
-  private transX: number // transformX
-  private transY: number // transformY
-  private startX: number // 开始x坐标
-  private startY: number // 开始y坐标
-  private startTime: number // 开始touch时间
-  private endTime: number // 结束touch时间
-  private tickX: number // 单次move监听回调x偏移量
-  private tickY: number // 单次move监听回调y偏移量
-  private closestArr: [number, number, number][] //
-  private closestTimer: number|null
-  private parentStyle: CSSStyleDeclaration | null
-  private style: CSSStyleDeclaration | null // 滚动容器的样式
+  public scrollParentWrap: HTMLElement
+  public scrollWrap: HTMLElement|null
+  public options: Partial<OptionsType>
+  public parentScrollWH: { w: number, h: number }
+  public scrollWH: { w: number, h: number }
+  public x: number // 当前x坐标
+  public y: number // 当前y坐标
+  public maxX: number // 最大水平移动距离
+  public maxY: number // 最大垂直移动距离
+  public transRegx: RegExp
+  public transX: number // transformX
+  public transY: number // transformY
+  public startX: number // 开始x坐标
+  public startY: number // 开始y坐标
+  public startTime: number // 开始touch时间
+  public endTime: number // 结束touch时间
+  public tickX: number // 单次move监听回调x偏移量
+  public tickY: number // 单次move监听回调y偏移量
+  public closestArr: [number, number, number][] //
+  public closestTimer: number|null
+  public parentStyle: CSSStyleDeclaration | null
+  public style: CSSStyleDeclaration | null // 滚动容器的样式
   constructor(dom:HTMLElement, options: Partial<OptionsType> = defaultOptions) {
     this.options = options;
     this.scrollParentWrap = dom;
     this.scrollWrap = dom.firstElementChild ? dom.firstElementChild as HTMLElement : null;
+    this.parentScrollWH = { w: 0, h: 0 };
+    this.scrollWH = { w: 0, h: 0 };
     this.x = 0; // 当前x
     this.y = 0; // 当前y
     this.maxX = 0; // 最大x
@@ -69,18 +78,21 @@ export default class WScroll {
   init() {
     this.parentStyle = this.scrollParentWrap.style;
     this.style = this.scrollWrap?.style || null;
-    this.scrollWrap?.getBoundingClientRect();
-    if (this.scrollWrap) {
-      const parentWH = this.getDomWH(this.scrollParentWrap);
-      const { w, h } = this.getDomWH(this.scrollWrap);
-      this.maxX = -w + parentWH.w;
-      this.maxY = h - parentWH.h;
-    }
     if (this.options.isOrigin) {
       this.createOriginScroll();
     } else {
       this.createVirtualScroll();
       this.addEvent();
+    }
+  }
+
+  setWH() {
+    if (this.scrollWrap) {
+      this.parentScrollWH = this.getDomWH(this.scrollParentWrap);
+      this.scrollWH = this.getDomWH(this.scrollWrap);
+      this.maxX = -this.scrollWH.w + this.parentScrollWH.w;
+      this.maxY = Math.max(0, Math.max(0, this.scrollWH.h - this.parentScrollWH.h));
+      console.log('maxY', this.maxY);
     }
   }
 
@@ -91,6 +103,12 @@ export default class WScroll {
   }
 
   createVirtualScroll() {
+    if (this.scrollWrap) {
+      this.setWH()
+      // this.scrollWrap.addEventListener('DOMNodeInserted',(e) => {
+      //   this.setWH();
+      // });
+    }
     document.documentElement.style.overflow = 'hidden';
     this.parentStyle && (this.parentStyle.overflow = 'hidden');
     const moveFn = (params: MovePosType) => {
@@ -108,11 +126,13 @@ export default class WScroll {
     };
     const afterMoveFn = (params: PosType) => {
       const { x, y } = params;
-      const [startX, startY, startTime] = this.closestArr[0];
-      this.momentum(
-        { x: startX, y: startY},
-        { x, y },
-        (this.endTime - startTime) / 1000);
+      if (this.closestArr.length) {
+        const [startX, startY, startTime] = this.closestArr[0];
+        this.momentum(
+          { x: startX, y: startY},
+          { x, y },
+          (this.endTime - startTime) / 1000);
+      }
     };
     Hooks.move.on(moveFn);
     Hooks.afterMove.on(afterMoveFn);
@@ -155,10 +175,6 @@ export default class WScroll {
       tickY: this.tickY,
     });
     FIFOCache(this.closestArr, [this.x, this.y, new Date().getTime()]);
-    // this.closestTimer = setInterval(() => {
-    //  this.closestX = this.x;
-    //  this.closestY = this.y;
-    // }, 200);
   }
 
   end(e: TouchEvent) {
@@ -200,19 +216,19 @@ export default class WScroll {
     return { x: 0, y: 0, z: 0 };
   }
 
-  setTransform(x: number, y: number, z: number = 0) {
-    x = Math.min(0, Math.max(x, this.maxX));
-    y = Math.min(0, Math.max(y, -this.maxY));
+  setTransform(x: number, y: number, z: number = 0, limit: boolean = true) {
+    if (limit) {
+      x = Math.min(0, Math.max(x, this.maxX));
+      y = Math.min(0, Math.max(y, -this.maxY));
+    }
     this.style && (this.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`);
   }
 
   momentum(start: PosType, end: PosType, time: number) {
     const yV0 = Math.abs(end.y - start.y) / time;
-    console.log('yV0', yV0);
     const a = -3000; // 加速度
     // Vt = V0 + at;
     const t = Math.abs((0 - yV0) / a);
-    console.log('t', t);
     // s = v0 * t + 1/2 * a * t^2
     let yS = 0;
     let yT = 0;
@@ -234,5 +250,13 @@ export default class WScroll {
     setTimeout(() => {
       this.style && (this.style.transition = 'none');
     }, Math.max(xT, yT) * 1000);
+  }
+
+  on(type: string, handler: FnType) {
+    Hooks[type] && Hooks[type].on(handler);
+  }
+
+  extend(Plugin: any) {
+    Plugin(this, Hooks);
   }
 }

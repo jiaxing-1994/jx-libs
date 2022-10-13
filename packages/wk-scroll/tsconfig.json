@@ -20,5 +20,11 @@
   "exclude": [
     "node_modules",
     "dist"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "extends/**/*.ts",
+    "extends/*.svg",
+    "types/index.d.ts"
   ]
 }
