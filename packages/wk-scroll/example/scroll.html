@@ -18,8 +18,10 @@
 		#scroll {
 		}
 		.item {
-			height: 40px;
+			height: 100px;
 			background-image: linear-gradient(90deg, red, green);
+			/*margin-top: 10px;*/
+			/*margin-bottom: 10px;*/
 		}
 	</style>
 </head>
@@ -43,6 +45,7 @@
 			scroll: 'y',
 			isOrigin: false,
 		});
+		let isFinish = 0;
 		const getData = (num) => {
 			return new Promise((resolve) => {
 				const itemsFrag = document.createDocumentFragment();
@@ -53,20 +56,22 @@
 					itemsFrag.appendChild(li);
 				}
 				setTimeout(() => {
+					isFinish += 1;
 					resolve(itemsFrag);
 				}, 2000);
 			});
 		}
 		wScroll.extend(ScrollRefresh({
+			initPullUp: true,
 			onPullDown: async () => {
 				const doms = await getData(10);
 				document.getElementById('scroll').appendChild(doms);
-				return false;
+				return true;
 			},
 			onPullUp: async () => {
-				const doms = await getData(0);
+				const doms = await getData(4);
 				document.getElementById('scroll').appendChild(doms);
-				return false;
+				return isFinish >= 1;
 			}
 		}));
 		wScroll.on('pullRefresh', (params) => {

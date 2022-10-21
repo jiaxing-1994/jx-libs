@@ -12,6 +12,7 @@ interface OptionsType {
 	noDataText: string,
 	finishText: string,
 	canLoadText: string,
+	initPullUp: boolean,
 	onPullDown?: Function,
 	onPullUp?: Function,
 }
@@ -20,6 +21,7 @@ const defaultOptions: OptionsType = {
 	pullDownMaxHeight: 80, // 触发下拉刷新的距离
 	pullUpMaxHeight: 0, // 触发上拉刷新离底部的距离
 	iconWidth: 30,
+	initPullUp: true,
 	pullingText: '下拉刷新',
 	loadingText: '加载中',
 	loadedText: '加载完成',
@@ -105,6 +107,7 @@ const ScrollRefresh = (optionConfig: Partial<OptionsType>) => {
 		pullingText,
 		canLoadText,
 		loadingText,
+		initPullUp,
 	} = options;
 	let isCanPullDown = false;
 	let isPullingDown = false; // 是否正在下拉
@@ -167,9 +170,9 @@ const ScrollRefresh = (optionConfig: Partial<OptionsType>) => {
 				textDom && (textDom.innerText = loadingText);
 				let animTimer = null;
 				svgDom && (animTimer = svgAnimTimer(svgDom));
-				console.log(instance.parentScrollWH);
-				if (instance.maxY > 0) {
-					instance.setTransform(instance.transX, -instance.maxY - 30, 0, false);
+				const currMaxY = instance.maxY;
+				if (currMaxY > 0) {
+					instance.setTransform(instance.transX, -currMaxY - 30, 0, false);
 				}
 				isFinished = !!await onPullUp();
 				if (isFinished) {
@@ -181,11 +184,11 @@ const ScrollRefresh = (optionConfig: Partial<OptionsType>) => {
 				animTimer !== null && clearInterval(animTimer);
 				animTimer = null;
 				setTimeout(() => {
-					finishPullUp();
+					finishPullUp(currMaxY);
 				}, 500);
 			}
 		}
-		const finishPullUp = () => {
+		const finishPullUp = (currMaxY: number) => {
 			isPullUpLoad = false;
 			const { refreshDom } = pullUpDom;
 			isPullingUpCanLoad = false;
@@ -198,11 +201,15 @@ const ScrollRefresh = (optionConfig: Partial<OptionsType>) => {
 						instance.style && (instance.style.transition = originTransition);
 					}, 200);
 				}
+				if (currMaxY > 0) {
+					instance.setTransform(instance.transX, -currMaxY, 0, false);
+				}
 			}
-			instance.setTransform(instance.transX, -instance.maxY, 0, false);
 		}
 
-		onPullUpLoad();
+		if (initPullUp) {
+			onPullUpLoad();
+		}
 		Hooks.beforeMove.on(() => {
 			const { transY } = instance;
 			isCanPullDown = false;
@@ -229,21 +236,22 @@ const ScrollRefresh = (optionConfig: Partial<OptionsType>) => {
 					isPullingDownCanLoad = true;
 					Hooks['pullDownRefresh'].emit(true);
 				}
-			} else if (transY < -instance.maxY + pullUpMaxHeight && !isPullUpLoad && !isFinished) {
+			} else if (transY < -instance.maxY + pullUpMaxHeight && !isPullUpLoad) {
 				// 上拉加载
 				isPullingUpCanLoad = true;
 				Hooks['pullUpRefresh'].emit(true);
+				if (onPullUp) {
+					onPullUpLoad();
+					if (isPullingDown) {
+						finishPullDown();
+					}
+				}
 			}
 		});
 
 		Hooks.afterMove.on(() => {
 			if (isPullingDownCanLoad && onPullDown && !isPullDownLoad) {
 				onPullDownLoad();
-			} else if (isPullingUpCanLoad && onPullUp && !isPullUpLoad) {
-				onPullUpLoad();
-				if (isPullingDown) {
-					finishPullDown();
-				}
 			} else if (isPullingDown) {
 				finishPullDown();
 			}

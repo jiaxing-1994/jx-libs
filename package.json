@@ -8,7 +8,7 @@
     "build:scroll": "pnpm -C packages/wk-scroll build",
     "build:date": "pnpm -C packages/wk-date build",
     "build:utils": "pnpm -C packages/wk-utils build",
-    "publish:scroll": "pnpm run build:scroll && pnpm publish --filter @wk-libs/scroll",
+    "publish:scroll": "pnpm run build:scroll && pnpm publish --no-git-checks --filter @wk-libs/scroll",
     "publish:date": "pnpm run build:date && pnpm publish --filter @wk-libs/date",
     "publish:utils": "pnpm run build:utils && pnpm publish --filter @wk-libs/utils",
     "publish": "pnpm run publish:scroll && pnpm run publish:date && pnpm run publish:utils",

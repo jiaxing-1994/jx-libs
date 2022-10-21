@@ -1,4 +1,4 @@
-import Hooks from './hooks.js';
+import CreateHooks, {HooksType} from './hooks.js';
 import { FIFOCache, getDistance } from './utils.js';
 import ScrollRefresh from '../extends/pullRefresh/index.js';
 import {FnType} from "@src/emit";
@@ -49,6 +49,7 @@ export default class WScroll {
   public closestTimer: number|null
   public parentStyle: CSSStyleDeclaration | null
   public style: CSSStyleDeclaration | null // 滚动容器的样式
+  public Hooks: HooksType
   constructor(dom:HTMLElement, options: Partial<OptionsType> = defaultOptions) {
     this.options = options;
     this.scrollParentWrap = dom;
@@ -72,6 +73,7 @@ export default class WScroll {
     this.transRegx = /^translate3d\((-?\d*.?\d*)px,\s?(-?\d*.?\d*)px,\s?(-?\d*.?\d*)px\)$/; // 方便从style取值
     this.style = null; // 滚动dom的样式
     this.parentStyle = null; // 滚动dom的外部容器样式
+    this.Hooks = CreateHooks();
     this.init();
   }
 
@@ -86,16 +88,6 @@ export default class WScroll {
     }
   }
 
-  setWH() {
-    if (this.scrollWrap) {
-      this.parentScrollWH = this.getDomWH(this.scrollParentWrap);
-      this.scrollWH = this.getDomWH(this.scrollWrap);
-      this.maxX = -this.scrollWH.w + this.parentScrollWH.w;
-      this.maxY = Math.max(0, Math.max(0, this.scrollWH.h - this.parentScrollWH.h));
-      console.log('maxY', this.maxY);
-    }
-  }
-
   createOriginScroll() {
     document.documentElement.style.overflow = 'hidden';
     this.parentStyle && (this.parentStyle.overflow = 'auto');
@@ -103,12 +95,7 @@ export default class WScroll {
   }
 
   createVirtualScroll() {
-    if (this.scrollWrap) {
-      this.setWH()
-      // this.scrollWrap.addEventListener('DOMNodeInserted',(e) => {
-      //   this.setWH();
-      // });
-    }
+    this.refresh();
     document.documentElement.style.overflow = 'hidden';
     this.parentStyle && (this.parentStyle.overflow = 'hidden');
     const moveFn = (params: MovePosType) => {
@@ -134,8 +121,8 @@ export default class WScroll {
           (this.endTime - startTime) / 1000);
       }
     };
-    Hooks.move.on(moveFn);
-    Hooks.afterMove.on(afterMoveFn);
+    this.Hooks.move.on(moveFn);
+    this.Hooks.afterMove.on(afterMoveFn);
   }
 
   addEvent() {
@@ -156,7 +143,7 @@ export default class WScroll {
     this.transX = x;
     this.transY = y;
     this.startTime = new Date().getTime();
-    Hooks.beforeMove.emit({
+    this.Hooks.beforeMove.emit({
       x: this.x,
       y: this.y,
     });
@@ -168,7 +155,7 @@ export default class WScroll {
     this.tickY = pageY - this.y;
     this.x = pageX;
     this.y = pageY;
-    Hooks.move.emit({
+    this.Hooks.move.emit({
       x: this.x,
       y: this.y,
       tickX: this.tickX,
@@ -186,17 +173,31 @@ export default class WScroll {
       clearInterval(this.closestTimer);
       this.closestTimer = null;
     }
-    Hooks.afterMove.emit({
+    this.Hooks.afterMove.emit({
       x: pageX,
       y: pageY,
     });
   }
 
+  refresh() {
+    this.setWH();
+  }
+
+  setWH() {
+    if (this.scrollWrap) {
+      this.parentScrollWH = this.getDomWH(this.scrollParentWrap);
+      this.scrollWH = this.getDomWH(this.scrollWrap);
+      this.maxX = -this.scrollWH.w + this.parentScrollWH.w;
+      this.maxY = Math.max(0, Math.max(0, this.scrollWH.h - this.parentScrollWH.h));
+      console.log('maxY', this.maxY);
+    }
+  }
+
   getDomWH(dom: HTMLElement): { w: number, h: number } {
-    const { width, height } = dom.getBoundingClientRect();
+    const { width, height, bottom, y, right, x } = dom.getBoundingClientRect();
     return {
-      w: width,
-      h: height,
+      w: Math.abs(right) + Math.abs(x),
+      h: Math.abs(bottom) + Math.abs(y),
     }
   }
 
@@ -253,10 +254,10 @@ export default class WScroll {
   }
 
   on(type: string, handler: FnType) {
-    Hooks[type] && Hooks[type].on(handler);
+    this.Hooks[type] && this.Hooks[type].on(handler);
   }
 
   extend(Plugin: any) {
-    Plugin(this, Hooks);
+    Plugin(this, this.Hooks);
   }
 }
