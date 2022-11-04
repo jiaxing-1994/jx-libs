@@ -14,7 +14,7 @@ export function deepCopy(data: unknown):unknown|null {
     return newData;
   }
   if (isObject(data)) {
-    const newData: Indeable = {};
+    const newData: Record<string, any> = {};
     for (let i in data) {
       if (isArray(data[i]) || isObject(data[i])) {
         newData[i] = deepCopy(data[i]);
@@ -29,7 +29,7 @@ export function deepCopy(data: unknown):unknown|null {
 
 // 唯一值
 let uuidMap = new Map();
-export function uuid(namespace:string = 'global', type = 'mix', num = 3) {
+export function uuid(namespace:string = 'global', type = 'mix', num = 3): string {
   if (!uuidMap.get(namespace)) {
     uuidMap.set(namespace, new Set());
   }
@@ -55,8 +55,8 @@ export function uuid(namespace:string = 'global', type = 'mix', num = 3) {
 }
 
 // 合并对象
-export function mergeObj(o1: unknown, o2: unknown) {
-  const obj: Indeable = {};
+export function mergeObj(o1: unknown, o2: unknown): Record<string, any> {
+  const obj: Record<string, any> = {};
   if (isObject(o1) && isObject(o2)) {
     for (const key in o1) {
       obj[key] = o1[key];
@@ -70,17 +70,17 @@ export function mergeObj(o1: unknown, o2: unknown) {
       }
     }
   } else {
-    throw new Error('参数不是对象');
+    return {};
   }
   return obj;
 }
 
 // 解析url参数
-export function parseUrlParams() {
+export function parseUrlParams(): Record<string, string> {
   const { href } = window.location;
   if (href.indexOf('?') > -1) {
     const paramsArr = decodeURIComponent(href).split('?')[1].split('&');
-    const params: Indeable = {};
+    const params: Record<string, any> = {};
     paramsArr.forEach((param) => {
       if (param.indexOf('=') > -1) {
         const paramArr = param.split('=');
@@ -95,7 +95,7 @@ export function parseUrlParams() {
 }
 
 // 生成url参数
-export function generateUrlParams(obj: unknown) {
+export function generateUrlParams(obj: unknown): string {
   let urlParamsArr = [];
   if (isObject(obj)) {
     for (const key in obj) {

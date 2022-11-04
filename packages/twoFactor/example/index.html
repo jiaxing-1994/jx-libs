@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,minimal-ui,viewport-fit=cover"
+	/>
+	<style>
+		html,body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<button id="openModal">展示弹窗</button>
+	<button id="openNoticeModal">展示通知</button>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+	<script src="../dist/twoFactor.js"></script>
+	<script>
+		const twoFactorInstance = new twoFactor.TwoFactor2({
+			baseUrl: 'http://10.50.50.219:8080',
+		});
+		document.getElementById('openModal').addEventListener('click', () => {
+			twoFactorInstance.open(423, '3c080671-c275-48be-b164-2c9125bd92c6', '6352493a8975e20790156c78');
+		});
+		document.getElementById('openNoticeModal').addEventListener('click', () => {
+			twoFactorInstance.open(203, '3c080671-c275-48be-b164-2c9125bd92c6', '6352493a8975e20790156c78');
+		});
+	</script>
+	<script type="module">
+		// import { TwoFactor2 } from '../dist/twoFactor.js';
+		// const twoFactorInstance = new TwoFactor2();
+		// twoFactorInstance.open()
+	</script>
+</body>
+</html>

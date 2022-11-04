@@ -6,8 +6,9 @@
     "dist"
   ],
   "references": [
-    { "path": "./packages/wk-scroll" },
-    { "path": "./packages/wk-utils" },
-    { "path": "./packages/wk-date" }
+    { "path": "./packages/scroll" },
+    { "path": "./packages/utils" },
+    { "path": "./packages/date" },
+    { "path": "./packages/http" }
   ]
 }

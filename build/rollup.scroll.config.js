@@ -1,14 +1,20 @@
 import path from 'path';
-import baseConfig from './rollup.base.config.js';
+import image from '@rollup/plugin-image';
+import plugins from './plugins.js';
 
 export default {
-	input: path.resolve(__dirname, '../packages/wk-scroll/src/core.ts'),
+	input: path.resolve(__dirname, '../packages/scroll/src/core.ts'),
 	output: {
-		file: path.resolve(__dirname, '../packages/wk-scroll/dist/scroll.js'),
+		file: path.resolve(__dirname, '../packages/scroll/dist/scroll.js'),
 		format: 'esm'
 	},
 	watch: {
 		exclude: 'node_modules/**'
 	},
-	...baseConfig,
+	plugins: [
+		...plugins,
+		image({
+			dom: true,
+		}),
+	],
 };

@@ -20,7 +20,7 @@ export const wrapper = (date: unknown, instance: WKDate): WKDate => {
 	})
 }
 
-export const allLocales: { [key:string]: LocaleType} = {};
+export const allLocales: Record<string, LocaleType> = {};
 export let defaultLocale = 'zh-cn';
 allLocales['zh-cn'] = zhCn;
 
@@ -37,8 +37,8 @@ const parseLocale = (preset: string|LocaleType, object?: LocaleType) => {
 			locale = presetLower;
 		}
 	} else {
-		const { name } = preset;
-		allLocales[name] = preset;
+		const { name } = preset as LocaleType;
+		allLocales[name] = preset as LocaleType;
 		locale = name;
 	}
 	if (locale) defaultLocale = locale;

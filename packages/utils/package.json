@@ -1,6 +1,6 @@
 {
   "name": "@wk-libs/utils",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "",
   "main": "./dist/utils.js",
   "types": "./types/index.d.ts",

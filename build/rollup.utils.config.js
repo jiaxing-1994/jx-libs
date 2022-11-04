@@ -1,11 +1,13 @@
 import path from 'path';
-import baseConfig from './rollup.base.config.js';
+import plugins from './plugins.js';
 
 export default {
-	input: path.resolve(__dirname, '../packages/wk-utils/index.ts'),
+	input: path.resolve(__dirname, '../packages/utils/index.ts'),
 	output: {
-		file: path.resolve(__dirname, '../packages/wk-utils/dist/utils.js'),
+		file: path.resolve(__dirname, '../packages/utils/dist/utils.js'),
 		format: 'esm'
 	},
-	...baseConfig,
+	plugins: [
+		...plugins,
+	],
 };

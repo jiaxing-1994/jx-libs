@@ -1,7 +1,7 @@
 import { isObject } from './type';
 // 通过class找dom
 
-export function getDomByClass(container = document, className: string) {
+export function getDomByClass(container: HTMLElement = document.body, className: string) {
   return container.getElementsByClassName(className);
 }
 // 获取dom属性或样式

@@ -1,0 +1,21 @@
+{
+  "name": "@wk-libs/http",
+  "version": "1.0.3",
+  "description": "",
+  "main": "dist/http.js",
+  "module": "dist/http.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "rollup --config ../../build/rollup.http.config.js",
+    "dev": "rollup --config ../../build/rollup.http.config.js --watch"
+  },
+  "files": ["dist"],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/qs": "^6.9.7",
+    "axios": "^0.27.2",
+    "qs": "^6.11.0"
+  }
+}

@@ -6,7 +6,7 @@ export function isArray(value: unknown): value is [] {
   return isType(value, 'Array');
 }
 
-export function isObject(value: unknown): value is Indeable {
+export function isObject(value: unknown): value is Record<string, any> {
   return isType(value, 'Object');
 }
 

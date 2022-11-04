@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "esnext",
-    "lib": ["esnext", "dom", "DOM.Iterable"],
+    "target": "es2015",
+    "lib": ["es2015", "DOM.Iterable", "DOM"],
     "useDefineForClassFields": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -14,12 +14,9 @@
     "esModuleInterop": true,
     "rootDir": ".",
     "baseUrl": "./",
-    "outDir": "./dist",
-    "paths": {
-      "@src/*": ["src/*"]
-    }
+    "outDir": "./dist"
   },
   "exclude": [
-    "dist"
+    "dist/*.js"
   ]
 }

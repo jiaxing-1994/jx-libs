@@ -15,7 +15,7 @@ const padStart = (str: unknown, length: number, pad: string) => {
 }
 
 const prettyUnit = (unit: string): string => {
-	const special: Indeable = {
+	const special: Record<string, string> = {
 		M: C.M,
 		y: C.Y,
 		w: C.W,

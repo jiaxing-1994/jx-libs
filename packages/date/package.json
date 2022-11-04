@@ -12,6 +12,6 @@
   "author": "jiaxing",
   "license": "ISC",
   "dependencies": {
-    "@wk-libs/utils": "workspace:^1.0.0"
+    "@wk-libs/utils": "workspace:^1.0.4"
   }
 }
