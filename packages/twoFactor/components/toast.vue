@@ -1,6 +1,13 @@
 <template>
   <transition name="toast-top">
-    <div class="toast flex black_bg white pd_1 br" v-show="toastShow">
+    <div
+	    class="toast flex black_bg white pd_1 br"
+	    :class="[
+				`g_${type}`,
+				`g_${type}_bg`
+	    ]"
+	    v-show="toastShow"
+    >
       {{ message }}
     </div>
   </transition>
@@ -21,6 +28,10 @@ export default {
 		show: {
 			type: Boolean,
 			default: false,
+		},
+		type: {
+			type: String,
+			default: 'info',
 		},
 	},
 	data() {
@@ -52,6 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import './style/global.scss';
 .toast {
   min-width: 60px;
   position: fixed;

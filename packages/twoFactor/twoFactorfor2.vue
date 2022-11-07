@@ -30,7 +30,7 @@
 				</footer>
 			</div>
 		</div>
-		<toast :show.sync="toastShow" :message="toastMsg"></toast>
+		<toast :show.sync="toastShow" :message="toastMsg" :type="toastType"></toast>
 	</div>
 </template>
 
@@ -65,6 +65,7 @@ export default {
 	data() {
 		return {
 			toastShow: false,
+			toastType: 'info',
 			toastMsg: '',
 			verifyCode: '',
 			time: 60,
@@ -86,7 +87,7 @@ export default {
 	methods: {
 		async onVerify() {
 			if (!/^\d{6}$/.test(this.verifyCode)) {
-				this.showToast('请输入6位正确的验证码');
+				this.showToast('请输入6位正确的验证码', 'warn');
 				return;
 			}
 			if (this.isVerifyCode) {
@@ -97,13 +98,13 @@ export default {
 				await this.verifyCodeApi();
 				this.isVerifyCode = false;
 				if (this.type === 1) {
-					this.showToast('验证成功,即将刷新页面以重新获取数据!');
+					this.showToast('验证成功,即将刷新页面以重新获取数据!', 'success');
 					setTimeout(() => {
 						window.location.reload();
 						this.$emit('verified');
 					}, 2000);
 				} else {
-					this.showToast('验证成功,请重新进行之前操作!');
+					this.showToast('验证成功,请重新进行之前操作!', 'success');
 					this.verifySuccess = true;
 					setTimeout(() => {
 						this.$emit('verified');
@@ -126,7 +127,7 @@ export default {
 				this.isSendingCode = true;
 				await this.sendCodeApi();
 				this.isSendingCode = false;
-				this.showToast('发送成功');
+				this.showToast('发送成功', 'success');
 				// 开启计时
 				this.startOn();
 			} catch (e) {
@@ -145,9 +146,10 @@ export default {
 				}
 			}, 1000);
 		},
-		showToast(msg) {
+		showToast(msg, type = 'info') {
 			this.toastShow = true;
 			this.toastMsg = msg;
+			this.toastType = type;
 		},
 
 		async sendCodeApi() {
@@ -157,7 +159,7 @@ export default {
 			if (res.status === 200 && res.data.success) {
 				return true;
 			}
-			this.showToast(res.data.message);
+			this.showToast(res.data.message, 'danger');
 			return await Promise.reject(res.data.message);
 		},
 		async verifyCodeApi() {
@@ -167,7 +169,7 @@ export default {
 			if (res.status === 200 && res.data.success) {
 				return true;
 			}
-			this.showToast('验证码错误');
+			this.showToast('验证码错误', 'danger');
 			this.verifyCode = '';
 			return await Promise.reject(res.data.message);
 		}

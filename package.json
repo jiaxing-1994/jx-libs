@@ -16,7 +16,7 @@
     "publish:date": "pnpm run build:date && pnpm publish --filter @wk-libs/date",
     "publish:utils": "pnpm run build:utils && pnpm publish --filter @wk-libs/utils",
     "publish:http": "pnpm run build:http && pnpm publish --filter @wk-libs/http",
-    "publish:twoFactor": "pnpm publish --filter @wk-libs/twoFactor",
+    "publish:twoFactor": "pnpm run build:twoFactor && pnpm publish --filter @wk-libs/twoFactor",
     "publish": "pnpm run publish:scroll && pnpm run publish:date && pnpm run publish:utils",
     "dev:docs": "pnpm -C docs dev"
   },

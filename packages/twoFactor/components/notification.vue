@@ -1,7 +1,9 @@
 <template>
 	<div id="twoFactorNotice" class="notification">
 		<div class="notification-content">
-			<p>当前页面有敏感数据，如需查看，请进行双因子认证当前页面有敏感数据。</p>
+			<p>
+				当前页面有<span class="g_danger">敏感数据</span>，如需查看，请进行双因子认证当前页面有敏感数据。
+			</p>
 			<button @click="onGoVerify">点击认证</button>
 		</div>
 		<div class="notification-close" @click="onClose">x</div>
@@ -47,6 +49,7 @@ export default {
 	display: flex;
 	align-items: flex-start;
 	width: 300px;
+	z-index: 9998;
 	&-content {
 		flex: 1;
 	}
