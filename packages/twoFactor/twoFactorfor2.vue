@@ -1,11 +1,11 @@
 <template>
 	<div id="twoFactorModal" class="twoFactor">
-		<div style="width: 100%;height: 100%;position:relative" v-show="!verifySuccess">
+		<div style="width: 100%;height: 100%;position:relative">
 			<div class="twoFactor_mask"></div>
-			<div class="twoFactor_content">
+			<div class="twoFactor_content" v-show="!verifySuccess">
 				<header>
 					<div>系统提示</div>
-					<div class="close-btn" @click="onClose">x</div>
+					<div class="close-btn" v-if="canClose" @click="onClose">x</div>
 				</header>
 				<p class="tip">请进行双因子认证</p>
 				<p class="tip_1">{{ msgText }}</p>
@@ -61,6 +61,10 @@ export default {
 		http: {
 			type: Object,
 		},
+		canClose: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	data() {
 		return {
@@ -81,6 +85,7 @@ export default {
 			switch (this.type) {
 				case 1: return '当前页面包含敏感数据，您需要先完成认证，才能查看具体内容';
 				case 2: return '当前操作设置了双因子认证，您需要先完成认证，才能操作成功';
+				case 3: return '当前页面包含敏感数据，编辑前需要进行双因子认证';
 			}
 		},
 	},
@@ -97,18 +102,19 @@ export default {
 				this.isVerifyCode = true;
 				await this.verifyCodeApi();
 				this.isVerifyCode = false;
-				if (this.type === 1) {
+				if ([1, 3].includes(this.type)) {
 					this.showToast('验证成功,即将刷新页面以重新获取数据!', 'success');
+					this.verifySuccess = true;
 					setTimeout(() => {
 						window.location.reload();
 						this.$emit('verified');
-					}, 2000);
+					}, 3000);
 				} else {
 					this.showToast('验证成功,请重新进行之前操作!', 'success');
 					this.verifySuccess = true;
 					setTimeout(() => {
 						this.$emit('verified');
-					}, 2000);
+					}, 3000);
 				}
 			} catch(e) {
 				console.log(e);

@@ -11,7 +11,10 @@ class TwoFactor2 {
 	private noticeId: string;
 	private propsData: Record<string, any>;
 	private http: WkHttp;
+	private hasSensitive: boolean;
 	private type: number; // 1:敏感数据 2:敏感操作
+	private props: Record<string, any>; // 组件属性
+	private listenerEvent: (remove?: boolean) => void;
  	private options: {
 		baseUrl: string,
 		timeout: number,
@@ -32,6 +35,7 @@ class TwoFactor2 {
 		this.id = 'twoFactor';
 		this.noticeId = 'twoFactorNotice';
 		this.propsData = propsData;
+		this.hasSensitive = false; // 是否有敏感数据
 		this.options = {
 			baseUrl: '',
 			timeout: 10000,
@@ -39,11 +43,40 @@ class TwoFactor2 {
 			operationStatus: 423,
 			...options,
 		};
+		this.props = {
+			msg: '',
+			token: '',
+			projectId: '',
+			type: 1,
+		};
 		this.http = new WkHttp({
 			baseUrl: this.options.baseUrl,
 			timeout: this.options.timeout,
 		});
 		this.type = 1;
+		this.listenerEvent = this.urlChangeListener();
+	}
+
+	/**
+	 * 监听url变换，如果url改变了并且有双因子弹窗，则关闭弹窗
+	 * 支持hash和history两种模式
+	 */
+	urlChangeListener() {
+		const urlChangeFn = () => {
+			document.body.removeEventListener('click', this.clickEventFn.bind(this)); // 移除body点击监听
+			this.listenerEvent(true); // 移除url变化监听
+			this.closeModal(); // 关闭双因子弹窗
+			this.closeNotice(); // 关闭双因子提醒
+		}
+		return (remove: boolean = false) => {
+			if (remove) {
+				window.removeEventListener('popstate', urlChangeFn);
+				window.removeEventListener('hashchange', urlChangeFn);
+			} else {
+				window.addEventListener('popstate', urlChangeFn);
+				window.addEventListener('hashchange', urlChangeFn);
+			}
+		}
 	}
 
 	/**
@@ -54,26 +87,40 @@ class TwoFactor2 {
 	 * @param msg 提示信息
 	 */
 	open(status: number, token: string, projectId: string, msg: string = '') {
+		this.hasSensitive = false;
+		this.listenerEvent();
+		document.body.addEventListener('click', this.clickEventFn.bind(this));
+		this.props = {
+			msg,
+			token,
+			projectId,
+			type: this.type,
+		}
 		switch (status) {
 			case this.options.dataStatus:
 				this.type = 1;
-				this.openNotice({
-					msg,
-					token,
-					projectId,
-					type: this.type,
-				});
+				this.hasSensitive = true;
+				this.openNotice(this.props);
 				break; // 敏感数据
 			case this.options.operationStatus:
 				this.type = 2;
-				this.openModal({
-					msg,
-					token,
-					projectId,
-					type: this.type,
-				});
+				this.openModal(this.props);
 				break; // 敏感操作
 			default: break;
+		}
+	}
+
+	/**
+	 * body点击事件
+	 * @param e
+	 */
+	clickEventFn(e: MouseEvent) {
+		if (['编辑'].includes((e.target as HTMLElement).innerText)) {
+			this.openModal({
+				...this.props,
+				canClose: false,
+				type: 3,
+			});
 		}
 	}
 
@@ -204,7 +251,6 @@ class TwoFactor2 {
 			this.twoFactorInstance = null;
 		}
 	}
-
 }
 
 export default TwoFactor2;

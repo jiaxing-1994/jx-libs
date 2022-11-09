@@ -1,6 +1,6 @@
 {
   "name": "@wk-libs/twoFactor",
-  "version": "1.1.1",
+  "version": "1.1.3",
   "description": "",
   "main": "dist/twoFactor.js",
   "scripts": {

@@ -2,7 +2,7 @@
 	<div id="twoFactorNotice" class="notification">
 		<div class="notification-content">
 			<p>
-				当前页面有<span class="g_danger">敏感数据</span>，如需查看，请进行双因子认证当前页面有敏感数据。
+				当前页面有<span class="g_danger">敏感数据</span>，如需查看，请进行双因子认证。
 			</p>
 			<button @click="onGoVerify">点击认证</button>
 		</div>
