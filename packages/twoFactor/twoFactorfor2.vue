@@ -5,7 +5,7 @@
 			<div class="twoFactor_content" v-show="!verifySuccess">
 				<header>
 					<div>系统提示</div>
-					<div class="close-btn" v-if="canClose" @click="onClose">x</div>
+					<div class="close-btn" @click="onClose">x</div>
 				</header>
 				<p class="tip">请进行双因子认证</p>
 				<p class="tip_1">{{ msgText }}</p>
@@ -60,10 +60,6 @@ export default {
 		},
 		http: {
 			type: Object,
-		},
-		canClose: {
-			type: Boolean,
-			default: true,
 		},
 	},
 	data() {
@@ -122,6 +118,9 @@ export default {
 			}
 		},
 		onClose() {
+			if (this.type === 3) {
+				window.location.reload();
+			}
 			this.$emit('close');
 		},
 		async onSendCode() {

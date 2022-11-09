@@ -118,7 +118,6 @@ class TwoFactor2 {
 		if (['编辑'].includes((e.target as HTMLElement).innerText)) {
 			this.openModal({
 				...this.props,
-				canClose: false,
 				type: 3,
 			});
 		}
