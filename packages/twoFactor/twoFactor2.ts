@@ -14,7 +14,8 @@ class TwoFactor2 {
 	private hasSensitive: boolean;
 	private type: number; // 1:敏感数据 2:敏感操作
 	private props: Record<string, any>; // 组件属性
-	private listenerEvent: (remove?: boolean) => void;
+	private urlListenerEvent: (remove?: boolean) => void;
+	private bodyListenerEvent: (remove?: boolean) => void;
  	private options: {
 		baseUrl: string,
 		timeout: number,
@@ -54,7 +55,26 @@ class TwoFactor2 {
 			timeout: this.options.timeout,
 		});
 		this.type = 1;
-		this.listenerEvent = this.urlChangeListener();
+		this.urlListenerEvent = this.urlChangeListener();
+		this.bodyListenerEvent = this.bodyClickListener();
+	}
+
+	bodyClickListener() {
+		const clickEventFn = (e: MouseEvent) => {
+			if (['编辑'].includes((e.target as HTMLElement).innerText)) {
+				this.openModal({
+					...this.props,
+					type: 3,
+				});
+			}
+		}
+		return (remove: boolean = false) => {
+			if (remove) {
+				document.body.removeEventListener('click', clickEventFn); // 移除body点击监听
+			} else {
+				document.body.addEventListener('click', clickEventFn); // 添加body点击监听
+			}
+		}
 	}
 
 	/**
@@ -63,10 +83,10 @@ class TwoFactor2 {
 	 */
 	urlChangeListener() {
 		const urlChangeFn = () => {
-			document.body.removeEventListener('click', this.clickEventFn.bind(this)); // 移除body点击监听
-			this.listenerEvent(true); // 移除url变化监听
+			this.bodyListenerEvent(true);
 			this.closeModal(); // 关闭双因子弹窗
 			this.closeNotice(); // 关闭双因子提醒
+			this.urlListenerEvent(true); // 移除url变化监听
 		}
 		return (remove: boolean = false) => {
 			if (remove) {
@@ -88,8 +108,8 @@ class TwoFactor2 {
 	 */
 	open(status: number, token: string, projectId: string, msg: string = '') {
 		this.hasSensitive = false;
-		this.listenerEvent();
-		document.body.addEventListener('click', this.clickEventFn.bind(this));
+		this.urlListenerEvent();
+		this.bodyListenerEvent();
 		this.props = {
 			msg,
 			token,
@@ -107,19 +127,6 @@ class TwoFactor2 {
 				this.openModal(this.props);
 				break; // 敏感操作
 			default: break;
-		}
-	}
-
-	/**
-	 * body点击事件
-	 * @param e
-	 */
-	clickEventFn(e: MouseEvent) {
-		if (['编辑'].includes((e.target as HTMLElement).innerText)) {
-			this.openModal({
-				...this.props,
-				type: 3,
-			});
 		}
 	}
 

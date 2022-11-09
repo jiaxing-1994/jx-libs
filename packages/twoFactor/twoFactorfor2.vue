@@ -218,6 +218,7 @@ export default {
 	padding: 20px;
 	font-size: 14px;
 	width: 40%;
+	max-width: 450px;
 	text-align: center;
 	border-radius: 10px;
 	animation: fade .3s ease-out;
