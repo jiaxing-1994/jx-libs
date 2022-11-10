@@ -12,12 +12,17 @@
 			padding: 0;
 			height: 100%;
 		}
+		video {
+			width: 100px;
+			height: 80px;
+		}
 	</style>
 </head>
 <body>
 	<button id="openModal">展示弹窗</button>
 	<button id="openNoticeModal">展示通知</button>
 	<button id="openNoticeModal">编辑</button>
+	<video></video>
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 	<script src="../dist/twoFactor.js"></script>
@@ -32,10 +37,18 @@
 			twoFactorInstance.open(203, '3c080671-c275-48be-b164-2c9125bd92c6', '6352493a8975e20790156c78');
 		});
 	</script>
-	<script type="module">
-		// import { TwoFactor2 } from '../dist/twoFactor.js';
-		// const twoFactorInstance = new TwoFactor2();
-		// twoFactorInstance.open()
+	<script>
+		var constraints = { audio: true, video: { width: 1280, height: 720 } };
+		navigator.mediaDevices.getUserMedia(constraints)
+			.then(function(mediaStream) {
+				console.log(mediaStream);
+				var video = document.querySelector('video');
+				video.srcObject = mediaStream;
+				video.onloadedmetadata = function(e) {
+					video.play();
+				};
+			})
+			.catch(function(err) { console.log(err.name + ": " + err.message); });
 	</script>
 </body>
 </html>
