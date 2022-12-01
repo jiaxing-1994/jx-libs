@@ -1,7 +1,5 @@
-import { TwoFactor2 } from '../index';
+import { TwoFactor2 } from "../index";
 
 declare module "@wk-libs/twoFactor" {
-	export {
-		TwoFactor2,
-	}
+  export { TwoFactor2 };
 }

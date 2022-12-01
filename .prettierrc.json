@@ -1,0 +1,8 @@
+{
+  "printWidth": 100,
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "singleAttributePerLine": true,
+  "vueIndentScriptAndStyle": false,
+  "endOfLine": "lf"
+}

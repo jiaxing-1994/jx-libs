@@ -1,6 +1,6 @@
 {
   "name": "@wk-libs/http",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "",
   "main": "dist/http.js",
   "module": "dist/http.js",
@@ -9,7 +9,7 @@
     "build": "rollup --config ../../build/rollup.http.config.js",
     "dev": "rollup --config ../../build/rollup.http.config.js --watch"
   },
-  "files": ["dist"],
+  "files": ["dist", "types", "WkHttp.ts"],
   "keywords": [],
   "author": "",
   "license": "ISC",

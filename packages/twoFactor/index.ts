@@ -1,5 +1,3 @@
-import TwoFactor2 from './twoFactor2.js';
+import TwoFactor2 from "./twoFactor2.js";
 
-export {
-	TwoFactor2,
-}
+export { TwoFactor2 };

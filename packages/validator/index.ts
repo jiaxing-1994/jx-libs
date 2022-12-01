@@ -1,35 +1,48 @@
-export interface ErrorType {
-	errMsg: string,
-	rule?: RuleType,
-	value?: any,
-}
-export interface RuleType {
-	[key: string]: any,
-	validatorType: string,
-	message?: string,
-	regx?: RegExp,
-	trigger?: string[],
-	required?: boolean,
-	min?: number,
-	max?: number,
-	validator?: (rule: RuleType, value: any, callback: (message?: string) => void) => void,
-	asyncValidator?: (rule: RuleType, value: any, callback: (message?: string) => void) => Promise<undefined>,
-}
-export default class FormValidator {
-	constructor() {
-	}
+import { isString, isObject } from "@wk-libs/utils";
+import requiredValidator from "./strategies/requiredValidator";
+import sizeValidator from "./strategies/sizeValidator";
+import lengthValidator from "./strategies/lengthValidator";
+import regexpValidator from "./strategies/regexpValidator";
+import { ErrorType, RuleType } from "./types";
 
-	async validator(value: any, rule: RuleType[]): Promise<ErrorType[]> => {
-		const promises: Promise<any>[] = [];
-		rule.forEach((ruleItem: RuleType) => {
-			if (validatorStrategy[ruleItem.validatorType]) {
-				if (wkUtils.isString(value)) {
-					value = value.trim();
-				}
-				promises.push(validatorStrategy[ruleItem.validatorType](value, ruleItem));
-			}
-		});
-		const errList = await Promise.all(promises);
-		return errList.filter((err) => err);
-	};
+class Validator {
+  private validatorStrategy: Record<string, (value: any, rule: RuleType) => boolean | ErrorType>;
+
+  constructor() {
+    // 可优化
+    this.validatorStrategy = {
+      SIZE: sizeValidator,
+      LENGTH: lengthValidator,
+      REQUIRED: requiredValidator,
+      REGEXP: regexpValidator,
+    };
+  }
+
+  validator(value: any, rule: RuleType[]) {
+    const errList: ErrorType[] = [];
+    rule.forEach((ruleItem: RuleType) => {
+      if (this.validatorStrategy[ruleItem.validatorType]) {
+        if (isString(value)) {
+          value = value.trim();
+        }
+        const res = this.validatorStrategy[ruleItem.validatorType](value, ruleItem);
+        if (isObject(res)) {
+          errList.push(res);
+        }
+      }
+    });
+    return errList.length > 0 ? errList : true;
+  }
+
+  validatorObj(valueObj: Record<string, any>, rule: Record<string, RuleType[]>) {
+    const errObj: Record<string, ErrorType[]> = {};
+    for (const key in valueObj) {
+      const res = this.validator(valueObj[key], rule[key]);
+      if (res !== true) {
+        errObj[key] = res;
+      }
+    }
+    return Object.keys(errObj).length > 0 ? errObj : true;
+  }
 }
+export default Validator;

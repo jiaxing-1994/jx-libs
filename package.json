@@ -12,11 +12,13 @@
     "build:utils": "pnpm -C packages/utils build",
     "build:http": "pnpm -C packages/http build",
     "build:twoFactor": "pnpm -C packages/twoFactor build",
+    "build:validator": "pnpm -C packages/validator build",
     "publish:scroll": "pnpm run build:scroll && pnpm publish --no-git-checks --filter @wk-libs/scroll",
     "publish:date": "pnpm run build:date && pnpm publish --filter @wk-libs/date",
     "publish:utils": "pnpm run build:utils && pnpm publish --filter @wk-libs/utils",
     "publish:http": "pnpm run build:http && pnpm publish --filter @wk-libs/http",
     "publish:twoFactor": "pnpm run build:twoFactor && pnpm publish --filter @wk-libs/twoFactor",
+    "publish:validator": "pnpm run build:validator && pnpm publish --filter @wk-libs/validator",
     "publish": "pnpm run publish:scroll && pnpm run publish:date && pnpm run publish:utils",
     "dev:docs": "pnpm -C docs dev"
   },
@@ -25,6 +27,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "@commitlint/cz-commitlint": "^17.1.2",
+    "@types/node": "^18.7.18",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
+    "commitizen": "^4.2.5",
     "@babel/core": "^7.19.6",
     "@rollup/plugin-babel": "^6.0.2",
     "@rollup/plugin-commonjs": "^22.0.2",
@@ -33,6 +42,12 @@
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-replace": "^5.0.1",
     "@vue/compiler-sfc": "^3.2.41",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
     "rollup": "2.79.1",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.34.1",
@@ -40,5 +55,13 @@
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
     "vue-template-compiler": "2.6.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,vue}": "eslint --fix"
   }
 }

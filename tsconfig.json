@@ -9,6 +9,7 @@
     { "path": "./packages/scroll" },
     { "path": "./packages/utils" },
     { "path": "./packages/date" },
-    { "path": "./packages/http" }
+    { "path": "./packages/http" },
+    { "path": "./packages/validator" }
   ]
 }
