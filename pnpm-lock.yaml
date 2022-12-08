@@ -92,6 +92,12 @@ importers:
   packages/scroll:
     specifiers: {}
 
+  packages/storage:
+    specifiers:
+      '@wk-libs/utils': workspace:^1.0.8
+    dependencies:
+      '@wk-libs/utils': link:../utils
+
   packages/twoFactor:
     specifiers:
       '@wk-libs/http': workspace:^1.0.3

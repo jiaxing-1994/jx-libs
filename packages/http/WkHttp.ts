@@ -5,8 +5,9 @@ import {
   RequestInterceptors,
   ResponseInterceptors,
   ErrorInterceptors,
-} from "./types/http";
+} from "./types/http.d";
 
+export type { AxiosRequestConfig };
 class WkHttp {
   private options: AxiosOptions;
   private axiosInstance: AxiosInstance;

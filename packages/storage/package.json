@@ -1,0 +1,22 @@
+{
+  "name": "@wk-libs/storage",
+  "version": "1.0.8",
+  "description": "",
+  "main": "dist/storage.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "storage.ts",
+    "strategy.ts",
+    "types",
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup --config ../../build/rollup.storage.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@wk-libs/utils": "workspace:^1.0.8"
+  }
+}

@@ -34,10 +34,14 @@ class Validator {
     return errList.length > 0 ? errList : true;
   }
 
-  validatorObj(valueObj: Record<string, any>, rule: Record<string, RuleType[]>) {
+  validatorObj(
+    valueObj: Record<string, any>,
+    rule: Record<string, RuleType[]>,
+    ignoreKeys: string[] = []
+  ) {
     const errObj: Record<string, ErrorType[]> = {};
     for (const key in valueObj) {
-      if (rule[key]) {
+      if (rule[key] && !ignoreKeys.includes(key)) {
         const res = this.validator(valueObj[key], rule[key]);
         if (res !== true) {
           errObj[key] = res;
