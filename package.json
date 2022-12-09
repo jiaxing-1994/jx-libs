@@ -17,7 +17,7 @@
     "publish:scroll": "pnpm run build:scroll && pnpm publish --no-git-checks --filter @wk-libs/scroll",
     "publish:date": "pnpm run build:date && pnpm publish --filter @wk-libs/date",
     "publish:utils": "pnpm run build:utils && pnpm publish --filter @wk-libs/utils",
-    "publish:http": "pnpm run build:http && pnpm publish --filter @wk-libs/http",
+    "publish:http": "pnpm run build:http && pnpm publish --filter @wk-libs/http --no-git-checks",
     "publish:twoFactor": "pnpm run build:twoFactor && pnpm publish --filter @wk-libs/twoFactor",
     "publish:validator": "pnpm run build:validator && pnpm publish --filter @wk-libs/validator",
     "publish:storage": "pnpm run build:storage && pnpm publish --filter @wk-libs/storage",

@@ -12,7 +12,7 @@ export default [
     babelHelpers: "bundled",
   }),
   json(),
-  typescript(),
   resolve(),
+  typescript(),
   // terser(),
 ];

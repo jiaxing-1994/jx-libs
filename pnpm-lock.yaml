@@ -3609,8 +3609,6 @@ packages:
     dependencies:
       follow-redirects: registry.npmmirror.com/follow-redirects/1.15.2
       form-data: registry.npmmirror.com/form-data/4.0.0
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   registry.npmmirror.com/base64-js/1.5.1:
@@ -5142,11 +5140,6 @@ packages:
     name: follow-redirects
     version: 1.15.2
     engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
     dev: false
 
   registry.npmmirror.com/form-data/4.0.0:

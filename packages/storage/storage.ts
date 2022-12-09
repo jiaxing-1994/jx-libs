@@ -68,7 +68,7 @@ class Storage {
     if (result) {
       return result;
     }
-    throw new Error(`${keyStr}不存在`);
+    return null;
   }
 
   removeLocal(key: string) {
@@ -93,7 +93,7 @@ class Storage {
     if (this.sessionStorageObj[key]) {
       return this.sessionStorageObj[key];
     }
-    throw new Error(`${key}不存在`);
+    return null;
   }
 
   removeSession(key: string) {

@@ -6,12 +6,12 @@ export default {
   output: {
     file: path.resolve(__dirname, "../packages/http/dist/http.js"),
     name: "http",
-    format: "umd",
+    format: "es",
     globals: {
       axios: "axios",
     },
   },
-  plugins: [...plugins],
+  plugins: plugins,
 
   external: ["axios"],
 };

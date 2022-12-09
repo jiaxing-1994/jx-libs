@@ -1,10 +1,10 @@
-import { isArray, isObject, isUseful } from './type';
+import { isArray, isObject, isUseful } from "./type";
 
 // 深拷贝
-export function deepCopy(data: unknown):unknown|null {
+export function deepCopy(data: unknown): unknown | null {
   if (isArray(data)) {
     const newData: any[] = [];
-    for (let i in data) {
+    for (const i in data) {
       if (isArray(data[i]) || isObject(data[i])) {
         newData.push(deepCopy(data[i]));
       } else {
@@ -15,7 +15,7 @@ export function deepCopy(data: unknown):unknown|null {
   }
   if (isObject(data)) {
     const newData: Record<string, any> = {};
-    for (let i in data) {
+    for (const i in data) {
       if (isArray(data[i]) || isObject(data[i])) {
         newData[i] = deepCopy(data[i]);
       } else {
@@ -28,22 +28,31 @@ export function deepCopy(data: unknown):unknown|null {
 }
 
 // 唯一值
-let uuidMap = new Map();
-export function uuid(namespace:string = 'global', type = 'mix', num = 3): string {
+const uuidMap = new Map();
+export function uuid(namespace = "global", type = "mix", num = 3): string {
   if (!uuidMap.get(namespace)) {
     uuidMap.set(namespace, new Set());
   }
-  const number = '1234567890';
-  const string = 'abcdefghijklmnopqrstuvwxyz';
-  let source = '';
+  const number = "1234567890";
+  const string = "abcdefghijklmnopqrstuvwxyz";
+  let source = "";
   switch (type) {
-    case 'mix': source = number + string; break;
-    case 'number': source = number; break;
-    case 'string': source = string; break;
-    default: source = number + string; break;
+    case "mix":
+      source = number + string;
+      break;
+    case "number":
+      source = number;
+      break;
+    case "string":
+      source = string;
+      break;
+    default:
+      source = number + string;
+      break;
   }
   function getUuid(c = source[parseInt(`${Math.random() * (source.length - 1)}`)]): string {
-    return c.length < num ? getUuid(c += source[parseInt(`${Math.random() * (source.length - 1)}`)])
+    return c.length < num
+      ? getUuid((c += source[parseInt(`${Math.random() * (source.length - 1)}`)]))
       : c;
   }
   let uuid = getUuid();
@@ -78,14 +87,14 @@ export function mergeObj(o1: unknown, o2: unknown): Record<string, any> {
 // 解析url参数
 export function parseUrlParams(): Record<string, string> {
   const { href } = window.location;
-  if (href.indexOf('?') > -1) {
-    const paramsArr = decodeURIComponent(href).split('?')[1].split('&');
+  if (href.indexOf("?") > -1) {
+    const paramsArr = decodeURIComponent(href).split("?")[1].split("&");
     const params: Record<string, any> = {};
     paramsArr.forEach((param) => {
-      if (param.indexOf('=') > -1) {
-        const paramArr = param.split('=');
+      if (param.indexOf("=") > -1) {
+        const paramArr = param.split("=");
         const key = paramArr[0];
-        const value = paramArr[1] || '';
+        const value = paramArr[1] || "";
         params[key] = value;
       }
     });
@@ -96,7 +105,7 @@ export function parseUrlParams(): Record<string, string> {
 
 // 生成url参数
 export function generateUrlParams(obj: unknown): string {
-  let urlParamsArr = [];
+  const urlParamsArr = [];
   if (isObject(obj)) {
     for (const key in obj) {
       if (obj[key]) {
@@ -104,5 +113,5 @@ export function generateUrlParams(obj: unknown): string {
       }
     }
   }
-  return urlParamsArr.join('&');
+  return urlParamsArr.join("&");
 }

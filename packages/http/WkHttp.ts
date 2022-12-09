@@ -1,13 +1,14 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosRequestHeaders } from "axios";
-import {
-  MethodEnum,
+import type {
   AxiosOptions,
   RequestInterceptors,
   ResponseInterceptors,
   ErrorInterceptors,
-} from "./types/http.d";
+} from "./types/http";
+import { MethodEnum } from "./types/http";
 
 export type { AxiosRequestConfig };
+
 class WkHttp {
   private options: AxiosOptions;
   private axiosInstance: AxiosInstance;
@@ -24,7 +25,7 @@ class WkHttp {
     return axios.create(options);
   }
 
-  async request<D>(config: AxiosRequestConfig): Promise<D> {
+  async request<Q, D>(config: AxiosRequestConfig<Q>): Promise<D> {
     try {
       const res: D = await this.axiosInstance.request(config);
       return res;
@@ -54,6 +55,7 @@ class WkHttp {
   }
 
   stringify(obj: Record<string, string>, options: any) {
+    console.log(options);
     const resArr = [];
     for (const key in obj) {
       resArr.push(`${key}=${String(obj[key])}`);
@@ -69,13 +71,13 @@ class WkHttp {
    * @param headers 请求头
    */
   get<Q, D>(url: string, baseURL: string, params?: Q, headers?: AxiosRequestHeaders) {
-    return this.request<D>({
+    return this.request<Q, D>({
       url,
       baseURL: baseURL || this.options.baseUrl || undefined,
       method: MethodEnum.get,
       params,
       headers,
-      paramsSerializer: (params) => {
+      paramsSerializer: (params: any) => {
         return this.stringify(params, { indices: false });
       },
     });
@@ -96,14 +98,14 @@ class WkHttp {
     params?: Record<string, string | number>,
     headers?: AxiosRequestHeaders
   ): Promise<D> {
-    return this.request<D>({
+    return this.request<Q, D>({
       url,
       baseURL: baseURL || this.options.baseUrl || undefined,
       method: MethodEnum.post,
       data,
       params,
       headers,
-      paramsSerializer: (params) => {
+      paramsSerializer: (params: any) => {
         return this.stringify(params, { indices: false });
       },
     });
@@ -117,7 +119,7 @@ class WkHttp {
    * @param headers 请求头
    */
   put<Q, D>(url: string, baseURL: string, data?: Q, headers?: AxiosRequestHeaders): Promise<D> {
-    return this.request<D>({
+    return this.request<Q, D>({
       url,
       baseURL: baseURL || this.options.baseUrl || undefined,
       method: MethodEnum.put,
@@ -134,13 +136,13 @@ class WkHttp {
    * @param headers 请求头
    */
   del<Q, D>(url: string, baseURL: string, params?: Q, headers?: AxiosRequestHeaders): Promise<D> {
-    return this.request<D>({
+    return this.request<Q, D>({
       url,
       baseURL: baseURL || this.options.baseUrl || undefined,
       method: MethodEnum.delete,
       params,
       headers,
-      paramsSerializer: (params) => {
+      paramsSerializer: (params: any) => {
         return this.stringify(params, { indices: false });
       },
     });

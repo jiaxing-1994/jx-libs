@@ -1,5 +1,5 @@
 import Vue from "vue";
-import WkHttp from "@wk-libs/http";
+import WkHttp from "../http";
 import TwoFactorfor2 from "./twoFactorfor2.vue";
 import Notification from "./components/notification.vue";
 
