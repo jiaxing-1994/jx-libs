@@ -1,18 +1,28 @@
-import { isString, isNumber } from "@wk-libs/utils";
+import { isString, isNumber, isArray } from "@wk-libs/utils";
 import { ErrorType, RuleType } from "../types";
 
-const requiredValidator = (value: any, rule: RuleType): boolean | ErrorType => {
+const requiredValidator = (
+  value: any,
+  rule: RuleType,
+  model: Record<string, any> = {}
+): boolean | ErrorType => {
   if (isString(value)) {
     value = value.trim();
   }
   let compareRes = false; // 默认不通过
   const errorMsg = "不能为空";
-  if (value || isNumber(value)) {
+  let validatorMsg: string | null = "";
+  if (rule.validator instanceof Function) {
+    validatorMsg = rule.validator(rule, value, model);
+    compareRes = !validatorMsg;
+  } else if (isArray(value)) {
+    compareRes = value.length > 0;
+  } else if (value || isNumber(value)) {
     compareRes = true;
   }
   return (
     compareRes || {
-      errMsg: rule.message || errorMsg,
+      errMsg: validatorMsg || rule.message || errorMsg,
       rule,
       value,
     }

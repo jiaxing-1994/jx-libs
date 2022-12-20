@@ -1,8 +1,9 @@
 {
   "name": "@wk-libs/storage",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "",
-  "main": "dist/storage.js",
+  "main": "dist/storage_umd.js",
+  "module": "dist/storage_es.js",
   "types": "types/index.d.ts",
   "files": [
     "storage.ts",

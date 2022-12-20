@@ -1,6 +1,6 @@
 {
   "name": "@wk-libs/twoFactor",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "",
   "main": "dist/twoFactor.js",
   "scripts": {
@@ -8,12 +8,15 @@
     "dev": "rollup --config ../../build/rollup.twoFactor.config.js --watch"
   },
   "keywords": [],
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "types": "./types/index.d.ts",
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@wk-libs/http": "workspace:^1.0.3",
-    "vue": "2.6.11"
+    "vue": "2.6.11",
+    "vue-template-compiler": "2.6.11"
   }
 }

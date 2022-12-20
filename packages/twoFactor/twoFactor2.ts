@@ -65,7 +65,8 @@ class TwoFactor2 {
 
   bodyClickListener() {
     const clickEventFn = (e: MouseEvent) => {
-      if (["编辑"].includes((e.target as HTMLElement).innerText)) {
+      const innerText = (e.target as HTMLElement).innerText.replace(/\s/g, "");
+      if (["编辑"].includes(innerText)) {
         this.openModal({
           ...this.props,
           type: 3,

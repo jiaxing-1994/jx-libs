@@ -2,11 +2,21 @@ import { ErrorType, RuleType } from "../types";
 import { isNumber } from "@wk-libs/utils";
 import { compareLen } from "./common";
 
-const sizeValidator = (value: any, rule: RuleType): boolean | ErrorType => {
+const sizeValidator = (
+  value: any,
+  rule: RuleType,
+  model: Record<string, any> = {}
+): boolean | ErrorType => {
   let compareRes = true; // 默认通过
   let errorMsg = "非数字";
-  // 不校验空值
-  if (value) {
+  if (rule.validator instanceof Function) {
+    const res = rule.validator(rule, value, model);
+    if (res) {
+      errorMsg = res;
+    }
+    compareRes = !res;
+  } else if (value) {
+    // 不校验空值
     value = Number(value);
     if (isNumber(value)) {
       errorMsg = "校验不通过";

@@ -27,6 +27,9 @@ export const pxReg: RegExp;
 export const pureStringReg: RegExp;
 export const pureNumberReg: RegExp;
 export const pureDWordReg: RegExp;
+export const telephoneReg: RegExp;
+export const passwordReg: RegExp;
+export const idReg: RegExp;
 
 export function isArray(value: any): value is any[];
 export function isObject(value: any): value is Record<string, any>;

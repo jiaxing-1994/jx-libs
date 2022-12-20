@@ -52,6 +52,9 @@ export default {
 	z-index: 9998;
 	&-content {
 		flex: 1;
+		p {
+			white-space: initial;
+		}
 	}
 	&-close {
 		width: 30px;

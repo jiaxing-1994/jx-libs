@@ -7,9 +7,6 @@ export default {
     file: path.resolve(__dirname, "../packages/http/dist/http.js"),
     name: "http",
     format: "es",
-    globals: {
-      axios: "axios",
-    },
   },
   plugins: plugins,
 

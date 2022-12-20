@@ -6,7 +6,10 @@ import regexpValidator from "./strategies/regexpValidator";
 import { ErrorType, RuleType } from "./types";
 
 class Validator {
-  private validatorStrategy: Record<string, (value: any, rule: RuleType) => boolean | ErrorType>;
+  private validatorStrategy: Record<
+    string,
+    (value: any, rule: RuleType, model: Record<string, any>) => boolean | ErrorType
+  >;
 
   constructor() {
     // 可优化
@@ -18,14 +21,14 @@ class Validator {
     };
   }
 
-  validator(value: any, rule: RuleType[]) {
+  validator(value: any, rule: RuleType[], model: Record<string, any> = {}) {
     const errList: ErrorType[] = [];
     rule.forEach((ruleItem: RuleType) => {
       if (this.validatorStrategy[ruleItem.validatorType]) {
         if (isString(value)) {
           value = value.trim();
         }
-        const res = this.validatorStrategy[ruleItem.validatorType](value, ruleItem);
+        const res = this.validatorStrategy[ruleItem.validatorType](value, ruleItem, model);
         if (isObject(res)) {
           errList.push(res);
         }
@@ -42,7 +45,7 @@ class Validator {
     const errObj: Record<string, ErrorType[]> = {};
     for (const key in valueObj) {
       if (rule[key] && !ignoreKeys.includes(key)) {
-        const res = this.validator(valueObj[key], rule[key]);
+        const res = this.validator(valueObj[key], rule[key], valueObj);
         if (res !== true) {
           errObj[key] = res;
         }

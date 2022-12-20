@@ -6,7 +6,7 @@ export interface RuleType {
   required?: boolean; // 是否必填
   min?: number; // 最小值
   max?: number; // 最大值
-  validator?: (rule: RuleType, value: any, callback: (message?: string) => void) => void; // 同步校验器
+  validator?: (rule: RuleType, value: any, model?: Record<string, any>) => string | null; // 同步校验器
   asyncValidator?: (
     rule: RuleType,
     value: any,
