@@ -9,12 +9,10 @@ const sizeValidator = (
 ): boolean | ErrorType => {
   let compareRes = true; // 默认通过
   let errorMsg = "非数字";
+  let validatorMsg: string | null = "";
   if (rule.validator instanceof Function) {
-    const res = rule.validator(rule, value, model);
-    if (res) {
-      errorMsg = res;
-    }
-    compareRes = !res;
+    validatorMsg = rule.validator(rule, value, model);
+    compareRes = !validatorMsg;
   } else if (value) {
     // 不校验空值
     value = Number(value);
@@ -28,7 +26,7 @@ const sizeValidator = (
   }
   return (
     compareRes || {
-      errMsg: rule.message || errorMsg,
+      errMsg: validatorMsg || rule.message || errorMsg,
       rule,
       value,
     }

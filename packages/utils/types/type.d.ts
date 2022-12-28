@@ -29,6 +29,7 @@ export const pureNumberReg: RegExp;
 export const pureDWordReg: RegExp;
 export const telephoneReg: RegExp;
 export const passwordReg: RegExp;
+export const licensePlateReg: RegExp;
 export const idReg: RegExp;
 
 export function isArray(value: any): value is any[];

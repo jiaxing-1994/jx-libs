@@ -5,12 +5,10 @@ import { RuleType } from "../types";
 const lengthValidator = (value: any, rule: RuleType, model: Record<string, any> = {}) => {
   let compareRes = true; // 默认通过
   let errorMsg = "非字符";
+  let validatorMsg: string | null = "";
   if (rule.validator instanceof Function) {
-    const res = rule.validator(rule, value, model);
-    if (res) {
-      errorMsg = res;
-    }
-    compareRes = !res;
+    validatorMsg = rule.validator(rule, value, model);
+    compareRes = !validatorMsg;
   } else if (value || isNumber(value)) {
     // 不校验空值
     value = String(value);
@@ -22,7 +20,7 @@ const lengthValidator = (value: any, rule: RuleType, model: Record<string, any> 
   }
   return (
     compareRes || {
-      errMsg: rule.message || errorMsg,
+      errMsg: validatorMsg || rule.message || errorMsg,
       rule,
       value,
     }

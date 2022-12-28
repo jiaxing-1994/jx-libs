@@ -1,4 +1,4 @@
-import { isString, isNumber, isArray } from "@wk-libs/utils";
+import { isString, isNumber, isArray, isBoolean } from "@wk-libs/utils";
 import { ErrorType, RuleType } from "../types";
 
 const requiredValidator = (
@@ -17,7 +17,7 @@ const requiredValidator = (
     compareRes = !validatorMsg;
   } else if (isArray(value)) {
     compareRes = value.length > 0;
-  } else if (value || isNumber(value)) {
+  } else if (value || isNumber(value) || isBoolean(value)) {
     compareRes = true;
   }
   return (
